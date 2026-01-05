@@ -33,14 +33,25 @@
         <section class="admin-status" id="admin-status">Loading fish...</section>
 
         <section class="admin-controls">
-            <div>
-                <label for="limit">Show</label>
-                <select id="limit">
-                    <option value="20">20</option>
-                    <option value="50" selected>50</option>
-                    <option value="100">100</option>
-                </select>
-                <span class="muted">most recent fish</span>
+            <div class="list-controls">
+                <div class="control-group">
+                    <label for="limit">Show</label>
+                    <select id="limit">
+                        <option value="20">20</option>
+                        <option value="50" selected>50</option>
+                        <option value="100">100</option>
+                    </select>
+                    <span class="muted">most recent fish</span>
+                </div>
+                <div class="control-group">
+                    <label for="filter">Filter</label>
+                    <select id="filter">
+                        <option value="all" selected>All fish</option>
+                        <option value="saved">Saved</option>
+                        <option value="no-tags">No tags</option>
+                        <option value="hidden">Hidden</option>
+                    </select>
+                </div>
             </div>
             <div class="pagination-controls">
                 <button id="prev-page" class="btn" disabled>← Previous</button>

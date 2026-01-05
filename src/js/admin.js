@@ -4,6 +4,7 @@
     const clearBtn = document.getElementById('clear-tank');
     const refreshBtn = document.getElementById('refresh-list');
     const limitSelect = document.getElementById('limit');
+    const filterSelect = document.getElementById('filter');
     const prevBtn = document.getElementById('prev-page');
     const nextBtn = document.getElementById('next-page');
     const pageInfoEl = document.getElementById('page-info');
@@ -25,8 +26,26 @@
         return d.toLocaleString();
     }
 
+    function getFilterValue() {
+        return filterSelect?.value || 'all';
+    }
+
+    function getFilterLabel(value = getFilterValue()) {
+        switch (value) {
+            case 'saved':
+                return 'Saved';
+            case 'no-tags':
+                return 'No tags';
+            case 'hidden':
+                return 'Hidden';
+            default:
+                return 'All fish';
+        }
+    }
+
     async function loadFish() {
         const limit = parseInt(limitSelect.value, 10) || 50;
+        const filterValue = getFilterValue();
         setStatus('Loading recent fish...');
         prevBtn.disabled = true;
         nextBtn.disabled = true;
@@ -40,6 +59,9 @@
                 order: 'desc',
                 offset: currentOffset.toString()
             });
+            if (filterValue !== 'all') {
+                params.set('filter', filterValue);
+            }
             const response = await fetch(`${BACKEND_URL}/api/fish?${params.toString()}`);
             const result = await response.json();
 
@@ -51,14 +73,14 @@
 
             renderFish(fishData);
             updatePagination(fishData.length, limit);
-            setStatus(buildStatusMessage(fishData.length));
+            setStatus(buildStatusMessage(fishData.length, getFilterLabel(filterValue)));
         } catch (err) {
             console.error(err);
             setStatus('Failed to load fish list. Please try again.', 'error');
         }
     }
 
-    function buildStatusMessage(count) {
+    function buildStatusMessage(count, filterLabel) {
         if (!count) {
             return 'No fish found.';
         }
@@ -66,7 +88,8 @@
         const start = totalCount ? Math.min(currentOffset + 1, totalCount) : currentOffset + 1;
         const end = totalCount ? Math.min(currentOffset + count, totalCount) : currentOffset + count;
         const totalText = totalCount ? ` of ${totalCount}` : '';
-        return `Showing ${start}-${end}${totalText}.`;
+        const filterText = filterLabel && filterLabel !== 'All fish' ? ` Filter: ${filterLabel}.` : '';
+        return `Showing ${start}-${end}${totalText}.${filterText}`;
     }
 
     function updatePagination(loadedCount, limit) {
@@ -296,6 +319,10 @@
     clearBtn.addEventListener('click', clearTank);
     refreshBtn.addEventListener('click', loadFish);
     limitSelect.addEventListener('change', () => {
+        currentOffset = 0;
+        loadFish();
+    });
+    filterSelect?.addEventListener('change', () => {
         currentOffset = 0;
         loadFish();
     });
