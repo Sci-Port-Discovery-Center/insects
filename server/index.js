@@ -106,6 +106,7 @@ function writeData(data) {
 
 function sanitizeFishPayload(fish, baseUrl) {
   const publicImage = buildPublicImageUrl(fish.Image, baseUrl);
+  const tags = Array.isArray(fish.tags) ? fish.tags : [];
   return {
     id: fish.id,
     Image: publicImage,
@@ -119,6 +120,7 @@ function sanitizeFishPayload(fish, baseUrl) {
     isVisible: fish.isVisible !== false,
     deleted: fish.deleted || false,
     isSaved: fish.isSaved || false,
+    tags,
     needsModeration: fish.needsModeration || false,
     userId: fish.userId
   };
@@ -171,6 +173,7 @@ app.post('/uploadfish', upload.single('image'), (req, res) => {
     isVisible: true,
     deleted: false,
     isSaved: false,
+    tags: [],
     upvotes: 0,
     downvotes: 0,
     userId: userId || nanoid()
@@ -213,6 +216,7 @@ app.post('/uploadfish/bulk', upload.array('images'), (req, res) => {
       isVisible: true,
       deleted: false,
       isSaved: false,
+      tags: [],
       upvotes: 0,
       downvotes: 0,
       userId: sharedUserId
@@ -240,7 +244,8 @@ app.get('/api/fish', (req, res) => {
     offset = '0',
     isVisible,
     deleted,
-    userId
+    userId,
+    filter
   } = req.query;
 
   let items = [...db.fish];
@@ -255,6 +260,14 @@ app.get('/api/fish', (req, res) => {
 
   if (userId) {
     items = items.filter((f) => f.userId === userId);
+  }
+
+  if (filter === 'saved') {
+    items = items.filter((f) => f.isSaved);
+  } else if (filter === 'no-tags') {
+    items = items.filter((f) => !Array.isArray(f.tags) || f.tags.length === 0);
+  } else if (filter === 'hidden') {
+    items = items.filter((f) => f.deleted || f.isVisible === false);
   }
 
   items.sort((a, b) => {
