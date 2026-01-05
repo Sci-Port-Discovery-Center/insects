@@ -195,6 +195,27 @@
         }
     }
 
+    async function toggleVisibility(fishId, isVisible) {
+        try {
+            const response = await fetch(`${BACKEND_URL}/admin/fish/${fishId}/visibility`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ isVisible })
+            });
+
+            const result = await response.json();
+            if (result && result.data) {
+                setStatus(`Fish ${isVisible ? 'unhidden' : 'hidden'} successfully.`);
+                await loadFish();
+            } else {
+                setStatus('Unexpected response while updating visibility.', 'warn');
+            }
+        } catch (err) {
+            console.error(err);
+            setStatus('Failed to update visibility.', 'error');
+        }
+    }
+
     function updateBulkProgress(message) {
         if (bulkUploadProgress) {
             bulkUploadProgress.textContent = message;
