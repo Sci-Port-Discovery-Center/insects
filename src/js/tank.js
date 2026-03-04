@@ -1689,7 +1689,7 @@ function animateFishes() {
             swimY = fish.y + Math.sin(time + fish.phase) * currentAmplitude;
         }
 
-        drawWigglingFish(fish, fish.x, swimY, fish.direction, time, fish.phase);
+        drawMovingInsect(fish, fish.x, swimY, fish.direction, time, fish.phase);
     }
 
     // Render food pellets
@@ -1704,11 +1704,11 @@ function animateFishes() {
     requestAnimationFrame(animateFishes);
 }
 
-function drawWigglingFish(fish, x, y, direction, time, phase) {
+function drawMovingInsect(fish, x, y, direction, time, phase) {
     const src = fish.fishCanvas;
     const w = fish.width;
     const h = fish.height;
-    const tailEnd = Math.floor(w * fish.peduncle);
+    const renderVariant = fish.renderVariant || fish.movementType || fish.locomotion || fish.animationType || 'swimming';
 
     // Check if this is the current user's fish
     const isCurrentUserFish = isUserFish(fish);
@@ -1765,37 +1765,54 @@ function drawWigglingFish(fish, x, y, direction, time, phase) {
     // Calculate scale for entering fish
     const scale = fish.scale || 1;
 
-    for (let i = 0; i < w; i++) {
-        let isTail, t, wiggle, drawCol, drawX;
-        if (direction === 1) {
-            isTail = i < tailEnd;
-            t = isTail ? (tailEnd - i - 1) / (tailEnd - 1) : 0;
-            wiggle = isTail ? Math.sin(time * 3 + phase + t * 2) * t * 12 : 0;
-            drawCol = i;
-            drawX = x + i + wiggle;
-        } else {
-            isTail = i >= w - tailEnd;
-            t = isTail ? (i - (w - tailEnd)) / (tailEnd - 1) : 0;
-            wiggle = isTail ? Math.sin(time * 3 + phase + t * 2) * t * 12 : 0;
-            drawCol = w - i - 1;
-            drawX = x + i - wiggle;
-        }
+    let rotation = 0;
+    let drawOffsetY = 0;
+
+    if (renderVariant === 'flying') {
+        // Subtle full-sprite rotation jitter for flying insects.
+        rotation = Math.sin(time * 0.03 + phase * 1.7) * 0.05;
+    } else if (renderVariant === 'crawling') {
+        // Tiny alternating step offsets to mimic crawling gait.
+        drawOffsetY = Math.sin(time * 0.06 + phase * 2) > 0 ? -1.5 : 1.5;
+    } else {
+        // Keep default movement generic and stable for non-insect modes.
+        rotation = Math.sin(time * 0.012 + phase) * 0.015;
+    }
+
+    swimCtx.save();
+    swimCtx.translate(x + w / 2, y + h / 2 + drawOffsetY);
+
+    // Keep sprite facing direction without column-by-column shearing.
+    swimCtx.scale(direction === 1 ? 1 : -1, 1);
+
+    if (rotation !== 0) {
+        swimCtx.rotate(rotation);
+    }
+
+    // Apply scale for entering fish
+    if (fish.isEntering && scale !== 1) {
+        swimCtx.scale(scale, scale);
+    }
+
+    // Flip upside down for dying fish
+    if (fish.isDying) {
+        swimCtx.scale(1, -1);
+    }
+
+    swimCtx.drawImage(src, -w / 2, -h / 2, w, h);
+
+    // Optional wing flap overlay for flying insects.
+    if (renderVariant === 'flying' && (fish.hasWings || fish.wingOverlay)) {
+        const flapScaleY = 1 + Math.sin(time * 0.18 + phase * 4) * 0.2;
         swimCtx.save();
-        swimCtx.translate(drawX, y);
-
-        // Apply scale for entering fish
-        if (fish.isEntering && scale !== 1) {
-            swimCtx.scale(scale, scale);
-        }
-
-        // Flip upside down for dying fish
-        if (fish.isDying) {
-            swimCtx.scale(1, -1);
-        }
-
-        swimCtx.drawImage(src, drawCol, 0, 1, h, 0, 0, 1, h);
+        swimCtx.globalAlpha = 0.35;
+        swimCtx.translate(0, -h * 0.2);
+        swimCtx.scale(1, flapScaleY);
+        swimCtx.drawImage(src, 0, 0, w, Math.floor(h * 0.45), -w / 2, -h / 2, w, h * 0.45);
         swimCtx.restore();
     }
+
+    swimCtx.restore();
 
     // Reset opacity
     if ((fish.isDying || fish.isEntering) && fish.opacity !== undefined) {
