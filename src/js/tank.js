@@ -377,7 +377,9 @@ function createFishObject({
         burstDampingFrames: 0,
         crawlMoveFrames: 0,
         crawlPauseFrames: Math.floor(Math.random() * 30),
-        crawlBandY: null
+        crawlBandY: null,
+        courseChangeFrames: Math.floor(Math.random() * 140) + 40,
+        verticalTarget: null
     };
 }
 
@@ -1606,12 +1608,44 @@ function animateFishes() {
                 fish.movementStyle = Math.random() < 0.6 ? 'flying' : 'crawling';
             }
 
+            fish.courseChangeFrames = (fish.courseChangeFrames || 0) - 1;
+            if (fish.courseChangeFrames <= 0) {
+                // Longer, irregular segments before changing direction/intent.
+                fish.courseChangeFrames = Math.floor(Math.random() * 160) + 45;
+
+                // Randomly flip x direction mid-path (not only at tank edges).
+                const nearLeft = fish.x < swimCanvas.width * 0.12;
+                const nearRight = fish.x > swimCanvas.width - fish.width - swimCanvas.width * 0.12;
+
+                if (nearLeft) {
+                    fish.direction = 1;
+                } else if (nearRight) {
+                    fish.direction = -1;
+                } else if (Math.random() < 0.4) {
+                    fish.direction *= -1;
+                }
+
+                // Give movement a medium-length random push.
+                fish.vx += fish.speed * fish.direction * (0.55 + Math.random() * 1.4);
+                fish.vy += (Math.random() - 0.5) * fish.speed * 1.8;
+
+                // Pick a random vertical area to drift toward over time.
+                fish.verticalTarget = Math.random() * Math.max(1, swimCanvas.height - fish.height);
+            }
+
             // Movement style controls locomotion before attraction forces
             if (fish.movementStyle === 'crawling') {
                 if (fish.crawlBandY === null || Number.isNaN(fish.crawlBandY)) {
                     const bandMin = swimCanvas.height * 0.68;
                     const bandMax = swimCanvas.height - fish.height - 12;
                     fish.crawlBandY = Math.min(bandMax, bandMin + Math.random() * (swimCanvas.height * 0.18));
+                }
+
+                // Occasionally choose a new vertical lane so crawlers travel up/down too.
+                if (Math.random() < 0.01) {
+                    const minY = swimCanvas.height * 0.25;
+                    const maxY = swimCanvas.height - fish.height - 10;
+                    fish.crawlBandY = minY + Math.random() * Math.max(1, maxY - minY);
                 }
 
                 if (fish.crawlPauseFrames > 0) {
@@ -1641,6 +1675,11 @@ function animateFishes() {
                     fish.vy += (Math.random() - 0.5) * fish.speed * 1.2;
                     fish.burstCooldown = Math.floor(Math.random() * 110) + 30;
                     fish.burstDampingFrames = 12;
+                }
+
+                if (fish.verticalTarget !== null && fish.verticalTarget !== undefined) {
+                    const targetError = fish.verticalTarget - fish.y;
+                    fish.vy += targetError * 0.008;
                 }
             }
 
@@ -1820,17 +1859,25 @@ function drawMovingInsect(fish, x, y, direction, time, phase) {
 
     let rotation = 0;
     let drawOffsetY = 0;
+    const vx = fish.vx || 0;
+    const vy = fish.vy || 0;
+    const movementPitch = Math.atan2(vy, Math.max(0.001, Math.abs(vx)));
+    const facingAdjustedPitch = movementPitch * (direction === 1 ? 1 : -1);
 
     if (renderVariant === 'flying') {
         // Subtle full-sprite rotation jitter for flying insects.
-        rotation = Math.sin(time * 0.03 + phase * 1.7) * 0.05;
+        rotation = Math.sin(time * 0.03 + phase * 1.7) * 0.05 + facingAdjustedPitch * 0.65;
     } else if (renderVariant === 'crawling') {
         // Tiny alternating step offsets to mimic crawling gait.
         drawOffsetY = Math.sin(time * 0.06 + phase * 2) > 0 ? -1.5 : 1.5;
+        rotation = facingAdjustedPitch * 0.4;
     } else {
         // Keep default movement generic and stable for non-insect modes.
-        rotation = Math.sin(time * 0.012 + phase) * 0.015;
+        rotation = Math.sin(time * 0.012 + phase) * 0.015 + facingAdjustedPitch * 0.45;
     }
+
+    // Keep tilt realistic.
+    rotation = Math.max(-0.75, Math.min(0.75, rotation));
 
     swimCtx.save();
     swimCtx.translate(x + w / 2, y + h / 2 + drawOffsetY);
