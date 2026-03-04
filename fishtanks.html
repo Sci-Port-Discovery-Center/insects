@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Fish Tanks - Create Custom Fish Collections | DrawAFish.com</title>
-    <meta name="description" content="Create and manage your own custom fish tank collections. Organize your favorite fish drawings, share tanks with friends, and discover community collections.">
-    <meta name="keywords" content="custom fish tanks, fish collections, personal aquarium, organize fish art, share fish tanks, community collections">
-    
+    <title>My Insect Tanks - Create Custom Insect Collections | DrawAInsect.com</title>
+    <meta name="description" content="Create and manage your own custom insect tank collections. Organize your favorite insect drawings, share tanks with friends, and discover community collections.">
+    <meta name="keywords" content="custom insect tanks, insect collections, personal aquarium, organize insect art, share insect tanks, community collections">
+
     <!-- Open Graph tags -->
-    <meta property="og:title" content="My Fish Tanks - Create Custom Fish Collections">
-    <meta property="og:description" content="Create and manage your own custom fish tank collections. Organize your favorite fish drawings and share with friends.">
+    <meta property="og:title" content="My Insect Tanks - Create Custom Insect Collections">
+    <meta property="og:description" content="Create and manage your own custom insect tank collections. Organize your favorite insect drawings and share with friends.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://drawafish.com/fishtanks.html">
-    
+    <meta property="og:url" content="https://drawainsect.com/insecttanks.html">
+
     <!-- Canonical URL -->
     <link rel="canonical" href="https://drawafish.com/fishtanks.html">
-    
+
     <link rel="stylesheet" href="src/css/style.css">
     <link rel="icon" href="public/favicon.ico">
-    
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-GS1GYSFBPX"></script>
     <script>
@@ -28,7 +28,7 @@
 
       gtag('config', 'G-GS1GYSFBPX');
     </script>
-    
+
     <style>
         /* Main container */
         .fishtanks-container {
@@ -36,19 +36,19 @@
             margin: 0 auto;
             padding: 20px;
         }
-        
+
         /* Header */
         .page-header {
             text-align: center;
             margin-bottom: 30px;
         }
-        
+
         .page-header h1 {
             margin: 0;
             font-size: 2.5em;
             color: #333;
         }
-        
+
         /* Navigation */
         .control-panel {
             text-align: center;
@@ -57,7 +57,7 @@
             background: #f8f9fa;
             border-radius: 10px;
         }
-        
+
         .control-panel a {
             color: #007bff;
             text-decoration: none;
@@ -68,11 +68,11 @@
             border-radius: 5px;
             transition: background 0.2s ease;
         }
-        
+
         .control-panel a:hover {
             background: #e9ecef;
         }
-        
+
         /* Status bar */
         .status-bar {
             background: #e9ecef;
@@ -81,7 +81,7 @@
             margin-bottom: 20px;
             text-align: center;
         }
-        
+
         /* Tab buttons */
         .tab-btn {
             padding: 10px 20px;
@@ -94,27 +94,27 @@
             font-weight: 500;
             margin: 0 5px;
         }
-        
+
         .tab-btn:hover {
             background: #f0f0f0;
             transform: translateY(-2px);
         }
-        
+
         .tab-btn.active {
             background: #333;
             color: white;
         }
-        
+
         /* Tab content */
         .tab-content {
             display: none;
             margin-top: 20px;
         }
-        
+
         .tab-content.active {
             display: block;
         }
-        
+
         /* Tank grid */
         .tank-grid {
             display: grid;
@@ -123,7 +123,7 @@
             margin: 20px 0;
             padding: 0;
         }
-        
+
         .tank-card {
             border: 2px solid #ddd;
             border-radius: 12px;
@@ -134,13 +134,13 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .tank-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 8px 25px rgba(0,0,0,0.15);
             border-color: #007bff;
         }
-        
+
         .tank-card h3 {
             margin: 0 0 12px 0;
             color: #333;
@@ -148,18 +148,18 @@
             font-weight: 600;
             line-height: 1.3;
         }
-        
+
         .tank-info {
             margin-bottom: 16px;
             color: #666;
             line-height: 1.5;
         }
-        
+
         .tank-info p {
             margin: 8px 0;
             font-size: 14px;
         }
-        
+
         .tank-stats {
             display: flex;
             justify-content: space-around;
@@ -169,18 +169,18 @@
             border-radius: 8px;
             border: 1px solid #e9ecef;
         }
-        
+
         .stat {
             text-align: center;
         }
-        
+
         .stat-number {
             font-size: 1.8em;
             font-weight: 700;
             color: #007bff;
             margin-bottom: 4px;
         }
-        
+
         .stat-label {
             font-size: 12px;
             color: #666;
@@ -188,14 +188,14 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        
+
         .tank-actions {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
             align-items: center;
         }
-        
+
         .tank-privacy-badge {
             position: absolute;
             top: 12px;
@@ -207,19 +207,19 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        
+
         .tank-privacy-badge.public {
             background: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
         }
-        
+
         .tank-privacy-badge.private {
             background: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
-        
+
         /* Buttons */
         .btn {
             padding: 10px 20px;
@@ -234,68 +234,68 @@
             text-decoration: none;
             display: inline-block;
         }
-        
+
         .btn:hover {
             background: #007bff;
             color: white;
             transform: translateY(-2px);
         }
-        
+
         .btn-small {
             padding: 5px 10px;
             margin: 2px;
             font-size: 12px;
         }
-        
+
         /* Enhanced button styles */
         .btn-view {
             background: #007bff;
             color: white;
             border: 2px solid #007bff;
         }
-        
+
         .btn-view:hover {
             background: #0056b3;
             border-color: #0056b3;
             transform: translateY(-1px);
         }
-        
+
         .btn-edit {
             background: #28a745;
             color: white;
             border: 2px solid #28a745;
         }
-        
+
         .btn-edit:hover {
             background: #1e7e34;
             border-color: #1e7e34;
             transform: translateY(-1px);
         }
-        
+
         .btn-share {
             background: #17a2b8;
             color: white;
             border: 2px solid #17a2b8;
         }
-        
+
         .btn-share:hover {
             background: #117a8b;
             border-color: #117a8b;
             transform: translateY(-1px);
         }
-        
+
         .btn-delete {
             background: #dc3545;
             color: white;
             border: 2px solid #dc3545;
         }
-        
+
         .btn-delete:hover {
             background: #c82333;
             border-color: #c82333;
             transform: translateY(-1px);
         }
-        
+
         /* Status messages */
         .error {
             background: #f8d7da;
@@ -305,7 +305,7 @@
             margin: 10px 0;
             border-radius: 5px;
         }
-        
+
         .success {
             background: #d4edda;
             color: #155724;
@@ -314,25 +314,25 @@
             margin: 10px 0;
             border-radius: 5px;
         }
-        
+
         .empty-state {
             text-align: center;
             padding: 50px;
             color: #666;
         }
-        
+
         .empty-state h3 {
             color: #333;
             margin-bottom: 15px;
         }
-        
+
         .loading {
             text-align: center;
             padding: 30px;
             color: #007bff;
             font-size: 16px;
         }
-        
+
         /* Search and Filter Controls */
         .search-controls {
             background: white;
@@ -342,12 +342,12 @@
             margin: 20px 0;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
-        
+
         .search-bar {
             position: relative;
             margin-bottom: 15px;
         }
-        
+
         .search-bar input {
             width: 100%;
             padding: 12px 45px 12px 15px;
@@ -357,12 +357,12 @@
             transition: border-color 0.2s ease;
             box-sizing: border-box;
         }
-        
+
         .search-bar input:focus {
             outline: none;
             border-color: #007bff;
         }
-        
+
         .search-btn {
             position: absolute;
             right: 8px;
@@ -377,19 +377,19 @@
             border-radius: 4px;
             transition: all 0.2s ease;
         }
-        
+
         .search-btn:hover {
             background: #f8f9fa;
             color: #333;
         }
-        
+
         .filter-controls {
             display: flex;
             gap: 15px;
             flex-wrap: wrap;
             align-items: center;
         }
-        
+
         .filter-controls select {
             padding: 10px 15px;
             border: 2px solid #ddd;
@@ -400,19 +400,19 @@
             transition: border-color 0.2s ease;
             min-width: 150px;
         }
-        
+
         .filter-controls select:focus {
             outline: none;
             border-color: #007bff;
         }
-        
+
         .tank-count {
             margin-left: auto;
             color: #666;
             font-size: 14px;
             font-weight: 500;
         }
-        
+
         /* Modals */
         .modal {
             display: none;
@@ -425,7 +425,7 @@
             z-index: 1000;
             animation: fadeIn 0.3s ease-out;
         }
-        
+
         .modal-content {
             background: white;
             border-radius: 12px;
@@ -439,12 +439,12 @@
             max-height: 80vh;
             overflow-y: auto;
         }
-        
+
         /* Special styling for add-to-tank modal */
         .modal-content.wide {
             max-width: 600px;
         }
-        
+
         .close {
             position: absolute;
             top: 15px;
@@ -456,13 +456,13 @@
             line-height: 1;
             transition: color 0.2s ease;
         }
-        
+
         .close:hover,
         .close:focus {
             color: #333;
             text-decoration: none;
         }
-        
+
         .share-url {
             border: 2px solid #ddd;
             padding: 15px;
@@ -474,131 +474,131 @@
             font-size: 14px;
             line-height: 1.4;
         }
-        
+
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        
+
         @keyframes slideIn {
-            from { 
+            from {
                 opacity: 0;
                 transform: translateY(-50px);
             }
-            to { 
+            to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-        
+
         @keyframes slideInRight {
-            from { 
+            from {
                 opacity: 0;
                 transform: translateX(100%);
             }
-            to { 
+            to {
                 opacity: 1;
                 transform: translateX(0);
             }
         }
-        
+
         @keyframes slideOutRight {
-            from { 
+            from {
                 opacity: 1;
                 transform: translateX(0);
             }
-            to { 
+            to {
                 opacity: 0;
                 transform: translateX(100%);
             }
         }
-        
+
         /* Responsive design */
         @media (max-width: 768px) {
             .fishtanks-container {
                 padding: 10px;
             }
-            
+
             .tank-grid {
                 grid-template-columns: 1fr;
                 gap: 15px;
             }
-            
+
             .tank-card {
                 margin: 0;
             }
-            
+
             .create-tank-form {
                 margin: 10px 0;
                 padding: 20px 15px;
             }
-            
+
             .modal-content {
                 width: 95%;
                 margin: 10% auto;
                 padding: 20px 15px;
                 max-height: 90vh;
             }
-            
+
             .close {
                 top: 10px;
                 right: 15px;
                 font-size: 24px;
             }
-            
+
             .search-controls {
                 padding: 15px;
             }
-            
+
             .filter-controls {
                 flex-direction: column;
                 gap: 10px;
             }
-            
+
             .filter-controls select {
                 min-width: 100%;
             }
-            
+
             .tank-actions {
                 justify-content: center;
             }
-            
+
             .tank-stats {
                 padding: 12px;
             }
-            
+
             .page-header h1 {
                 font-size: 2em;
             }
-            
+
             .fish-preview {
                 grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
                 gap: 8px;
             }
-            
+
             .fish-item {
                 width: 45px;
                 height: 45px;
             }
         }
-        
+
         @media (min-width: 769px) and (max-width: 1024px) {
             .tank-grid {
                 grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             }
         }
-        
+
         @media (min-width: 1025px) {
             .tank-grid {
                 grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             }
         }
-        
+
         /* Tank card animations */
         .tank-card {
             animation: fadeInUp 0.3s ease-out;
         }
-        
+
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -609,45 +609,45 @@
                 transform: translateY(0);
             }
         }
-        
+
         /* Loading states */
         .tank-grid.loading {
             opacity: 0.7;
             pointer-events: none;
         }
-        
+
         .empty-state {
             grid-column: 1 / -1;
             text-align: center;
             padding: 60px 20px;
             color: #666;
         }
-        
+
         .empty-state h3 {
             color: #333;
             margin-bottom: 15px;
             font-size: 1.5em;
         }
-        
+
         .empty-state p {
             margin-bottom: 20px;
             font-size: 16px;
             line-height: 1.5;
         }
-        
+
         /* Form styles for modals */
         .modal .form-group {
             margin-bottom: 20px;
         }
-        
+
         .modal .form-group label {
             font-weight: bold;
             display: block;
             margin-bottom: 8px;
             color: #333;
         }
-        
-        .modal .form-group input, 
+
+        .modal .form-group input,
         .modal .form-group textarea {
             width: 100%;
             border: 2px solid #ddd;
@@ -658,36 +658,36 @@
             box-sizing: border-box;
             font-family: inherit;
         }
-        
-        .modal .form-group input:focus, 
+
+        .modal .form-group input:focus,
         .modal .form-group textarea:focus {
             outline: none;
             border-color: #007bff;
         }
-        
+
         .modal .form-group textarea {
             height: 100px;
             resize: vertical;
         }
-        
+
         .modal .checkbox-group {
             display: flex;
             align-items: center;
             gap: 10px;
         }
-        
+
         .modal .checkbox-group input[type="checkbox"] {
             width: auto;
             margin: 0;
         }
-        
+
         .modal .checkbox-group label {
             margin: 0;
             font-weight: normal;
             cursor: pointer;
         }
-        
-        /* Fish selection grid */
+
+        /* Insect selection grid */
         .fish-preview {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
@@ -699,7 +699,7 @@
             border-radius: 8px;
             background: #f8f9fa;
         }
-        
+
         .fish-item {
             width: 50px;
             height: 50px;
@@ -712,23 +712,23 @@
             justify-content: center;
             background: white;
         }
-        
+
         .fish-item:hover {
             border-color: #007bff;
             transform: scale(1.05);
             box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
         }
-        
+
         .fish-item.selected {
             border-color: #007bff;
             background: #e3f2fd;
             box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
         }
-        
+
         .fish-item canvas {
             border-radius: 4px;
         }
-        
+
         /* Tank selection in modal */
         .tank-selection-grid {
             display: grid;
@@ -738,7 +738,7 @@
             overflow-y: auto;
             padding: 5px;
         }
-        
+
         .tank-selection-item {
             border: 2px solid #e9ecef;
             border-radius: 12px;
@@ -748,28 +748,28 @@
             cursor: pointer;
             position: relative;
         }
-        
+
         .tank-selection-item:hover {
             border-color: #007bff;
             background: #f8f9fa;
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
         }
-        
+
         .tank-selection-item h4 {
             margin: 0 0 8px 0;
             color: #333;
             font-size: 1.1em;
             font-weight: 600;
         }
-        
+
         .tank-selection-item .tank-description {
             margin: 0 0 8px 0;
             color: #666;
             font-size: 14px;
             line-height: 1.4;
         }
-        
+
         .tank-selection-stats {
             display: flex;
             gap: 15px;
@@ -777,13 +777,13 @@
             font-size: 13px;
             color: #666;
         }
-        
+
         .tank-selection-stats .stat-item {
             display: flex;
             align-items: center;
             gap: 4px;
         }
-        
+
         .tank-privacy-indicator {
             position: absolute;
             top: 12px;
@@ -794,17 +794,17 @@
             font-weight: 600;
             text-transform: uppercase;
         }
-        
+
         .tank-privacy-indicator.public {
             background: #d4edda;
             color: #155724;
         }
-        
+
         .tank-privacy-indicator.private {
             background: #f8d7da;
             color: #721c24;
         }
-        
+
         .add-to-tank-btn {
             width: 100%;
             padding: 10px 15px;
@@ -817,13 +817,13 @@
             font-weight: 500;
             transition: all 0.2s ease;
         }
-        
+
         .add-to-tank-btn:hover {
             background: #0056b3;
             border-color: #0056b3;
             transform: translateY(-1px);
         }
-        
+
         .no-tanks-message {
             text-align: center;
             padding: 30px 20px;
@@ -832,43 +832,43 @@
             background: #f8f9fa;
             color: #666;
         }
-        
+
         .no-tanks-message h3 {
             margin: 0 0 10px 0;
             color: #333;
             font-size: 1.2em;
         }
-        
+
         .no-tanks-message p {
             margin: 0 0 15px 0;
             line-height: 1.5;
         }
-        
+
         .no-tanks-message .btn {
             display: inline-block;
             text-decoration: none;
         }
-        
+
         /* Responsive design for tank selection modal */
         @media (max-width: 768px) {
             .tank-selection-grid {
                 max-height: 300px;
                 gap: 10px;
             }
-            
+
             .tank-selection-item {
                 padding: 12px;
             }
-            
+
             .tank-selection-item h4 {
                 font-size: 1em;
             }
-            
+
             .tank-selection-stats {
                 font-size: 12px;
                 gap: 12px;
             }
-            
+
             .add-to-tank-btn {
                 padding: 8px 12px;
                 font-size: 13px;
@@ -879,9 +879,9 @@
 <body>
     <div class="fishtanks-container">
         <div class="page-header">
-            <h1>My Fish Tanks</h1>
+            <h1>My Insect Tanks</h1>
         </div>
-        
+
         <div class="control-panel">
             <strong>Navigation:</strong>
             <a href="index.html">draw</a>
@@ -893,7 +893,7 @@
         </div>
 
         <div class="status-bar" id="auth-info">
-            <div id="auth-status">Please log in to manage your fish tanks</div>
+            <div id="auth-status">Please log in to manage your insect tanks</div>
         </div>
 
         <div class="control-panel">
@@ -918,7 +918,7 @@
                     <option value="updated">Recently Updated</option>
                     <option value="created">Recently Created</option>
                     <option value="name">Name (A-Z)</option>
-                    <option value="fish">Most Fish</option>
+                    <option value="insect">Most Insect</option>
                     <option value="views">Most Views</option>
                 </select>
             </div>
@@ -931,7 +931,7 @@
             <div id="my-tanks-grid" class="tank-grid"></div>
             <div id="my-tanks-empty" class="empty-state" style="display: none;">
                 <h3>No tanks found!</h3>
-                <p>Create your first fish tank to get started.</p>
+                <p>Create your first insect tank to get started.</p>
                 <button class="btn" onclick="showTab('create-tank')">Create First Tank</button>
             </div>
         </div>
@@ -942,25 +942,25 @@
                 <h2>Create New Tank</h2>
                 <div id="create-tank-error" class="error" style="display: none;"></div>
                 <div id="create-tank-success" class="success" style="display: none;"></div>
-                
+
                 <form id="create-tank-form">
                     <div class="form-group">
                         <label for="tank-name">Tank Name *</label>
                         <input type="text" id="tank-name" name="name" required maxlength="50">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="tank-description">Description</label>
                         <textarea id="tank-description" name="description" maxlength="200"></textarea>
                     </div>
-                    
+
                     <div class="form-group">
                         <label>
                             <input type="checkbox" id="tank-public" name="isPublic" checked>
-                            Make public (others can view and add fish)
+                            Make public (others can view and add insect)
                         </label>
                     </div>
-                    
+
                     <button type="submit" class="btn">Create Tank</button>
                 </form>
             </div>
@@ -1012,19 +1012,19 @@
         </div>
     </div>
 
-    <!-- Add Fish Modal -->
+    <!-- Add Insect Modal -->
     <div id="add-fish-modal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('add-fish-modal')">&times;</span>
-            <h2>Add Fish to Tank</h2>
+            <h2>Add Insect to Tank</h2>
             <div id="add-fish-error" class="error" style="display: none;"></div>
             <div id="add-fish-success" class="success" style="display: none;"></div>
-            <div id="user-fish-loading" class="loading" style="display: none;">Loading available fish...</div>
+            <div id="user-fish-loading" class="loading" style="display: none;">Loading available insects...</div>
             <div id="user-fish-grid" class="fish-preview"></div>
             <div id="user-fish-empty" class="empty-state" style="display: none;">
-                <h3>No fish available</h3>
-                <p>No fish are available to add to your tank right now.</p>
-                <a href="index.html" class="btn">Draw Fish</a>
+                <h3>No insects available</h3>
+                <p>No insect are available to add to your tank right now.</p>
+                <a href="index.html" class="btn">Draw Insect</a>
             </div>
         </div>
     </div>
