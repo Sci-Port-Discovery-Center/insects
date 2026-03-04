@@ -348,13 +348,10 @@ function createFishObject({
     downvotes = 0,
     score = 0,
     userId = null,
-    motionStyle = 'flying',
-    turnRate = 0.08,
-    burstChance = 0.02,
-    burstStrength = 0.4,
-    hoverDamping = 0.9,
-    maxVel = 3
+    movementStyle = null
 }) {
+    const resolvedMovementStyle = movementStyle || (Math.random() < 0.6 ? 'flying' : 'crawling');
+
     return {
         fishCanvas,
         x,
@@ -375,12 +372,12 @@ function createFishObject({
         downvotes,
         score,
         userId,
-        motionStyle,
-        turnRate,
-        burstChance,
-        burstStrength,
-        hoverDamping,
-        maxVel,
+        movementStyle: resolvedMovementStyle,
+        burstCooldown: Math.floor(Math.random() * 80) + 20,
+        burstDampingFrames: 0,
+        crawlMoveFrames: 0,
+        crawlPauseFrames: Math.floor(Math.random() * 30),
+        crawlBandY: null
     };
 }
 
@@ -434,12 +431,7 @@ function loadFishImageToTank(imgUrl, fishData, onDone) {
                 downvotes: fishData.downvotes || 0,
                 score: fishData.score || 0,
                 userId: fishData.userId || fishData.UserId || null,
-                motionStyle,
-                turnRate: fishData.turnRate || motionParams.turnRate,
-                burstChance: fishData.burstChance || motionParams.burstChance,
-                burstStrength: fishData.burstStrength || motionParams.burstStrength,
-                hoverDamping: fishData.hoverDamping || motionParams.hoverDamping,
-                maxVel: fishData.maxVel || motionParams.maxVel
+                movementStyle: fishData.movementStyle || null
             });
 
             // Add entrance animation for new fish
@@ -1626,32 +1618,46 @@ function animateFishes() {
             if (!fish.vx) fish.vx = 0;
             if (!fish.vy) fish.vy = 0;
 
-            const isFlying = fish.motionStyle !== 'crawling';
+            if (!fish.movementStyle) {
+                fish.movementStyle = Math.random() < 0.6 ? 'flying' : 'crawling';
+            }
 
-            if (isFlying) {
-                // Fast heading corrections and occasional dart bursts.
-                if (Math.random() < fish.turnRate) {
-                    fish.direction = (fish.vx || fish.direction) >= 0 ? 1 : -1;
-                    fish.vy += (Math.random() - 0.5) * fish.burstStrength * 0.2;
+            // Movement style controls locomotion before attraction forces
+            if (fish.movementStyle === 'crawling') {
+                if (fish.crawlBandY === null || Number.isNaN(fish.crawlBandY)) {
+                    const bandMin = swimCanvas.height * 0.68;
+                    const bandMax = swimCanvas.height - fish.height - 12;
+                    fish.crawlBandY = Math.min(bandMax, bandMin + Math.random() * (swimCanvas.height * 0.18));
                 }
 
-                fish.vx += fish.speed * fish.direction * (0.12 + fish.turnRate * 0.4);
+                if (fish.crawlPauseFrames > 0) {
+                    fish.crawlPauseFrames -= 1;
+                    fish.vx *= 0.7;
+                } else {
+                    if (fish.crawlMoveFrames <= 0) {
+                        fish.crawlMoveFrames = Math.floor(Math.random() * 18) + 8;
+                        fish.vx += fish.speed * fish.direction * (0.45 + Math.random() * 0.45);
+                    }
 
-                if (Math.random() < fish.burstChance) {
-                    fish.vx += fish.direction * fish.burstStrength;
-                    fish.vy += (Math.random() - 0.5) * fish.burstStrength * 0.5;
+                    fish.crawlMoveFrames -= 1;
+                    if (fish.crawlMoveFrames <= 0) {
+                        fish.crawlPauseFrames = Math.floor(Math.random() * 28) + 12;
+                    }
                 }
+
+                const bandError = fish.crawlBandY - fish.y;
+                fish.vy += bandError * 0.05;
             } else {
-                // Ground-skimming, friction-heavy movement with little vertical drift.
-                fish.vx *= 0.78;
-                fish.vy *= 0.55;
+                // Flying fish: small steady drive and occasional bursts.
+                fish.vx += fish.speed * fish.direction * 0.08;
+                fish.burstCooldown = (fish.burstCooldown || 0) - 1;
 
-                if (Math.random() < fish.burstChance) {
-                    fish.vx += fish.direction * fish.burstStrength;
+                if (fish.burstCooldown <= 0) {
+                    fish.vx += fish.speed * fish.direction * (0.8 + Math.random() * 1.1);
+                    fish.vy += (Math.random() - 0.5) * fish.speed * 1.2;
+                    fish.burstCooldown = Math.floor(Math.random() * 110) + 30;
+                    fish.burstDampingFrames = 12;
                 }
-
-                fish.vx += fish.speed * fish.direction * 0.02;
-                fish.vy += (Math.random() - 0.5) * 0.03;
             }
 
             // Apply food attraction using cached data
@@ -1661,17 +1667,16 @@ function animateFishes() {
                 const distance = foodDetectionData.nearestDistance;
 
                 if (distance > 0) {
-                    // Attraction remains optional steering, capped for snappier reactions.
+                    // Calculate attraction force, favoring snappier course correction.
                     const distanceRatio = distance / FOOD_DETECTION_RADIUS;
-                    const attractionStrength = FOOD_ATTRACTION_FORCE * (1 - distanceRatio * distanceRatio);
-                    const steeringCap = fish.burstStrength * 0.35;
-                    const steerX = Math.max(-steeringCap, Math.min(steeringCap, (dx / distance) * attractionStrength));
-                    const steerY = Math.max(-steeringCap, Math.min(steeringCap, (dy / distance) * attractionStrength));
+                    const attractionStrength = FOOD_ATTRACTION_FORCE * Math.max(0.2, 1.15 - distanceRatio);
 
-                    fish.vx += steerX;
-                    fish.vy += steerY;
+                    // Keep food attraction for both movement styles, but with less smoothing.
+                    fish.vx += (dx / distance) * attractionStrength;
+                    fish.vy += (dy / distance) * (fish.movementStyle === 'crawling' ? attractionStrength * 0.45 : attractionStrength);
 
-                    if (Math.abs(dx) > 10) {
+                    // Direction flips should feel sharp, not sinusoidal.
+                    if (Math.abs(dx) > 3) {
                         fish.direction = dx > 0 ? 1 : -1;
                     }
                 }
@@ -1719,23 +1724,23 @@ function animateFishes() {
             fish.vx *= frictionFactor;
             fish.vy *= frictionFactor;
 
-            // Limit velocity to prevent over-acceleration.
-            const maxVel = fish.maxVel || fish.speed * 2;
+            if (fish.movementStyle === 'flying' && fish.burstDampingFrames > 0) {
+                fish.vx *= 0.94;
+                fish.vy *= 0.94;
+                fish.burstDampingFrames -= 1;
+            }
+
+            // Limit velocity to prevent fish from moving too fast
+            const maxVel = fish.movementStyle === 'flying' ? fish.speed * 2.4 : fish.speed * 1.6;
             const velMag = Math.sqrt(fish.vx * fish.vx + fish.vy * fish.vy);
             if (velMag > maxVel) {
                 fish.vx = (fish.vx / velMag) * maxVel;
                 fish.vy = (fish.vy / velMag) * maxVel;
             }
 
-            // Ensure minimum horizontal drift so insects keep moving.
-            const minDrift = isFlying ? fish.speed * 0.08 : fish.speed * 0.02;
-            if (Math.abs(fish.vx) < minDrift) {
-                fish.vx = fish.direction * minDrift;
-            }
-
-            // Crawlers should generally keep low vertical velocity.
-            if (!isFlying) {
-                fish.vy = Math.max(-0.25, Math.min(0.25, fish.vy));
+            // Ensure minimum movement to prevent complete stops
+            if (Math.abs(fish.vx) < 0.1 && fish.movementStyle !== 'crawling') {
+                fish.vx = fish.speed * fish.direction * 0.1;
             }
 
             // Small reorientation push to avoid wall-sticking.
@@ -1745,22 +1750,20 @@ function animateFishes() {
             }
         }
 
-        // Calculate swim position - reduce sine wave when fish is attracted to food
+        // Calculate swim position without continuous bobbing.
         let swimY;
         if (fish.isDying) {
             swimY = fish.y;
         } else {
-            // Use cached food detection data for swim animation
-            const fishId = fish.docId || `fish_${fishes.indexOf(fish)}`;
-            const foodDetectionData = foodDetectionCache.get(fishId);
-            const hasNearbyFood = foodDetectionData ? foodDetectionData.hasNearbyFood : false;
-
-            // Reduce sine wave amplitude when attracted to food for more realistic movement
-            const currentAmplitude = hasNearbyFood ? fish.amplitude * 0.3 : fish.amplitude;
-            swimY = fish.y + Math.sin(time + fish.phase) * currentAmplitude;
+            if (fish.movementStyle === 'flying') {
+                const jitter = Math.sin(time * 12 + fish.phase * 5) * 1.2 + (Math.random() - 0.5) * 0.6;
+                swimY = fish.y + jitter;
+            } else {
+                swimY = fish.y;
+            }
         }
 
-        drawWigglingFish(fish, fish.x, swimY, fish.direction, time, fish.phase);
+        drawMovingInsect(fish, fish.x, swimY, fish.direction, time, fish.phase);
     }
 
     // Render food pellets
@@ -1775,11 +1778,11 @@ function animateFishes() {
     requestAnimationFrame(animateFishes);
 }
 
-function drawWigglingFish(fish, x, y, direction, time, phase) {
+function drawMovingInsect(fish, x, y, direction, time, phase) {
     const src = fish.fishCanvas;
     const w = fish.width;
     const h = fish.height;
-    const tailEnd = Math.floor(w * fish.peduncle);
+    const renderVariant = fish.renderVariant || fish.movementType || fish.locomotion || fish.animationType || 'swimming';
 
     // Check if this is the current user's fish
     const isCurrentUserFish = isUserFish(fish);
@@ -1836,37 +1839,54 @@ function drawWigglingFish(fish, x, y, direction, time, phase) {
     // Calculate scale for entering fish
     const scale = fish.scale || 1;
 
-    for (let i = 0; i < w; i++) {
-        let isTail, t, wiggle, drawCol, drawX;
-        if (direction === 1) {
-            isTail = i < tailEnd;
-            t = isTail ? (tailEnd - i - 1) / (tailEnd - 1) : 0;
-            wiggle = isTail ? Math.sin(time * 3 + phase + t * 2) * t * 12 : 0;
-            drawCol = i;
-            drawX = x + i + wiggle;
-        } else {
-            isTail = i >= w - tailEnd;
-            t = isTail ? (i - (w - tailEnd)) / (tailEnd - 1) : 0;
-            wiggle = isTail ? Math.sin(time * 3 + phase + t * 2) * t * 12 : 0;
-            drawCol = w - i - 1;
-            drawX = x + i - wiggle;
-        }
+    let rotation = 0;
+    let drawOffsetY = 0;
+
+    if (renderVariant === 'flying') {
+        // Subtle full-sprite rotation jitter for flying insects.
+        rotation = Math.sin(time * 0.03 + phase * 1.7) * 0.05;
+    } else if (renderVariant === 'crawling') {
+        // Tiny alternating step offsets to mimic crawling gait.
+        drawOffsetY = Math.sin(time * 0.06 + phase * 2) > 0 ? -1.5 : 1.5;
+    } else {
+        // Keep default movement generic and stable for non-insect modes.
+        rotation = Math.sin(time * 0.012 + phase) * 0.015;
+    }
+
+    swimCtx.save();
+    swimCtx.translate(x + w / 2, y + h / 2 + drawOffsetY);
+
+    // Keep sprite facing direction without column-by-column shearing.
+    swimCtx.scale(direction === 1 ? 1 : -1, 1);
+
+    if (rotation !== 0) {
+        swimCtx.rotate(rotation);
+    }
+
+    // Apply scale for entering fish
+    if (fish.isEntering && scale !== 1) {
+        swimCtx.scale(scale, scale);
+    }
+
+    // Flip upside down for dying fish
+    if (fish.isDying) {
+        swimCtx.scale(1, -1);
+    }
+
+    swimCtx.drawImage(src, -w / 2, -h / 2, w, h);
+
+    // Optional wing flap overlay for flying insects.
+    if (renderVariant === 'flying' && (fish.hasWings || fish.wingOverlay)) {
+        const flapScaleY = 1 + Math.sin(time * 0.18 + phase * 4) * 0.2;
         swimCtx.save();
-        swimCtx.translate(drawX, y);
-
-        // Apply scale for entering fish
-        if (fish.isEntering && scale !== 1) {
-            swimCtx.scale(scale, scale);
-        }
-
-        // Flip upside down for dying fish
-        if (fish.isDying) {
-            swimCtx.scale(1, -1);
-        }
-
-        swimCtx.drawImage(src, drawCol, 0, 1, h, 0, 0, 1, h);
+        swimCtx.globalAlpha = 0.35;
+        swimCtx.translate(0, -h * 0.2);
+        swimCtx.scale(1, flapScaleY);
+        swimCtx.drawImage(src, 0, 0, w, Math.floor(h * 0.45), -w / 2, -h / 2, w, h * 0.45);
         swimCtx.restore();
     }
+
+    swimCtx.restore();
 
     // Reset opacity
     if ((fish.isDying || fish.isEntering) && fish.opacity !== undefined) {
