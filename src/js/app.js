@@ -109,7 +109,7 @@ function showModal(html, onClose) {
 }
 
 // --- Fish submission modal handler ---
-async function submitFish(artist, needsModeration = false) {
+async function submitFish(artist) {
     function dataURLtoBlob(dataurl) {
         const arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
             bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
@@ -121,7 +121,7 @@ async function submitFish(artist, needsModeration = false) {
     const formData = new FormData();
     formData.append('image', imageBlob, 'fish.png');
     formData.append('artist', artist);
-    formData.append('needsModeration', needsModeration.toString());
+    formData.append('needsModeration', 'false');
     if(localStorage.getItem('userId')) {
         formData.append('userId', localStorage.getItem('userId'));
     }
@@ -167,9 +167,7 @@ async function submitFish(artist, needsModeration = false) {
             localStorage.setItem('userId', result.data.userId);
 
             // Stay on the draw page, show a confirmation message, and reset the canvas
-            const successMessage = needsModeration
-                ? 'Thanks! Your fish will appear once it is reviewed.'
-                : 'Great swim! Your fish is headed to the tank soon.';
+            const successMessage = 'Great swim! Your fish is headed to the tank soon.';
             const successCta = {
                 label: 'View the tank',
                 href: 'tank.html'
@@ -208,9 +206,7 @@ swimBtn.addEventListener('click', async () => {
     const artist = savedArtist && savedArtist.trim() ? savedArtist.trim() : 'Anonymous';
     localStorage.setItem('artistName', artist);
 
-    const needsModeration = !isFish || modelUnavailable;
-
-    await submitFish(artist, needsModeration); // Pass moderation flag
+    await submitFish(artist);
 });
 
 // Paint options UI
@@ -756,10 +752,10 @@ async function verifyFishDoodle(canvas) {
         updateProbabilityDisplay({ fishProbability, isFish });
         return { isFish, fishProbability, modelUnavailable: false };
     } catch (error) {
-        console.warn('Fish verification unavailable; allowing submission with review:', error);
+        console.warn('Fish verification unavailable; allowing submission:', error);
         if (!modelWarningDisplayed && !isSafari) {
             updateProbabilityDisplay({
-                message: 'Fish checker unavailable in this browser. We\'ll review your submission manually.'
+                message: 'Fish checker unavailable in this browser. You can still submit your fish.'
             });
             modelWarningDisplayed = true;
         }
@@ -808,7 +804,7 @@ async function checkFishAfterStroke() {
                 console.error('Failed to load model on startup:', error);
                 if (!modelWarningDisplayed && !isSafariBrowser()) {
                     updateProbabilityDisplay({
-                        message: 'Fish checker unavailable in this browser. We\'ll review your submission manually.'
+                        message: 'Fish checker unavailable in this browser. You can still submit your fish.'
                     });
                     modelWarningDisplayed = true;
                 }
@@ -818,7 +814,7 @@ async function checkFishAfterStroke() {
             console.error('Failed to load ONNX Runtime script');
             if (!modelWarningDisplayed && !isSafariBrowser()) {
                 updateProbabilityDisplay({
-                    message: 'Fish checker unavailable in this browser. We\'ll review your submission manually.'
+                    message: 'Fish checker unavailable in this browser. You can still submit your fish.'
                 });
                 modelWarningDisplayed = true;
             }
