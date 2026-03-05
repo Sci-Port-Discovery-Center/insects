@@ -167,7 +167,7 @@ async function submitFish(artist) {
             localStorage.setItem('userId', result.data.userId);
 
             // Stay on the draw page, show a confirmation message, and reset the canvas
-            const successMessage = 'Great swim! Your fish is headed to the tank soon.';
+            const successMessage = 'Great crawl! Your insect is headed to the tank soon.';
             const successCta = {
                 label: 'View the tank',
                 href: 'tank.html'
@@ -181,10 +181,10 @@ async function submitFish(artist) {
             resetDrawingState();
             submissionSuccess = true;
         } else {
-            alert('Sorry, there was a problem uploading your fish. Please try again.');
+            alert('Sorry, there was a problem uploading your insect. Please try again.');
         }
     } catch (err) {
-        alert('Failed to submit fish: ' + err.message);
+        alert('Failed to submit insect: ' + err.message);
         if (submitBtn) {
             submitBtn.disabled = false;
             submitBtn.textContent = 'Submit';
@@ -350,7 +350,7 @@ function resetDrawingState() {
     showFishWarning(false);
     const probDiv = document.getElementById('fish-probability');
     if (probDiv) {
-        probDiv.textContent = 'Ready for a new fish!';
+        probDiv.textContent = 'Ready for a new insect!';
         probDiv.style.color = '#333';
     }
 }
@@ -755,7 +755,7 @@ async function verifyFishDoodle(canvas) {
         console.warn('Fish verification unavailable; allowing submission:', error);
         if (!modelWarningDisplayed && !isSafari) {
             updateProbabilityDisplay({
-                message: 'Fish checker unavailable in this browser. You can still submit your fish.'
+                message: 'Insect checker unavailable in this browser. You can still submit your insect.'
             });
             modelWarningDisplayed = true;
         }
@@ -804,7 +804,7 @@ async function checkFishAfterStroke() {
                 console.error('Failed to load model on startup:', error);
                 if (!modelWarningDisplayed && !isSafariBrowser()) {
                     updateProbabilityDisplay({
-                        message: 'Fish checker unavailable in this browser. You can still submit your fish.'
+                        message: 'Insect checker unavailable in this browser. You can still submit your insect.'
                     });
                     modelWarningDisplayed = true;
                 }
@@ -814,7 +814,7 @@ async function checkFishAfterStroke() {
             console.error('Failed to load ONNX Runtime script');
             if (!modelWarningDisplayed && !isSafariBrowser()) {
                 updateProbabilityDisplay({
-                    message: 'Fish checker unavailable in this browser. You can still submit your fish.'
+                    message: 'Insect checker unavailable in this browser. You can still submit your insect.'
                 });
                 modelWarningDisplayed = true;
             }

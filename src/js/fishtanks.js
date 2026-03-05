@@ -96,7 +96,7 @@ function updateAuthUI(isLoggedIn) {
         authLink.onclick = logout;
     } else {
         authInfo.classList.add('logged-out');
-        authStatus.textContent = 'Please log in to manage your fish tanks';
+        authStatus.textContent = 'Please log in to manage your insect tanks';
         authLink.textContent = 'Login';
         authLink.href = 'login.html';
         authLink.onclick = null;
@@ -926,11 +926,11 @@ async function loadAvailableFish() {
         console.error('Error loading available fish:', err);
         const errorElement = document.getElementById('add-fish-error');
         if (errorElement) {
-            errorElement.textContent = 'Failed to load available fish';
+            errorElement.textContent = 'Failed to load available insects';
             errorElement.style.display = 'block';
         } else {
             console.error('Error element not found');
-            alert('Failed to load available fish. Please try again.');
+            alert('Failed to load available insects. Please try again.');
         }
     } finally {
         loading.style.display = 'none';
@@ -940,7 +940,7 @@ async function loadAvailableFish() {
 // Show add fish modal
 async function showAddFishModal(tankId) {
     if (!currentUser) {
-        alert('Please log in to add fish');
+        alert('Please log in to add insects');
         return;
     }
     
@@ -1025,10 +1025,10 @@ async function addFishToTank(fishId) {
         
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.error || 'Failed to add fish to tank');
+            throw new Error(errorData.error || 'Failed to add insect to tank');
         }
         
-        showSuccess('add-fish-success', 'Fish added to tank successfully!');
+        showSuccess('add-fish-success', 'Insect added to tank successfully!');
         
         // Refresh tanks and close modal after delay
         setTimeout(() => {
@@ -1037,7 +1037,7 @@ async function addFishToTank(fishId) {
         }, 1500);
         
     } catch (err) {
-        console.error('Error adding fish to tank:', err);
+        console.error('Error adding insect to tank:', err);
         showError('add-fish-error', err.message);
     }
 }

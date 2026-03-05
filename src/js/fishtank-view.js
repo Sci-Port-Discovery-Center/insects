@@ -362,7 +362,7 @@ function refreshTank() {
 // Show add fish modal
 async function showAddFishModal() {
     if (!currentUser) {
-        alert('Please log in to add fish');
+        alert('Please log in to add insects');
         return;
     }
     
@@ -403,11 +403,11 @@ async function loadAvailableFish() {
         console.error('Error loading available fish:', err);
         const errorElement = document.getElementById('add-fish-error');
         if (errorElement) {
-            errorElement.textContent = 'Failed to load available fish';
+            errorElement.textContent = 'Failed to load available insects';
             errorElement.style.display = 'block';
         } else {
             console.error('Error element not found');
-            alert('Failed to load available fish. Please try again.');
+            alert('Failed to load available insects. Please try again.');
         }
     } finally {
         loading.style.display = 'none';
@@ -485,10 +485,10 @@ async function addFishToTank(fishId) {
         
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.error || 'Failed to add fish to tank');
+            throw new Error(errorData.error || 'Failed to add insect to tank');
         }
         
-        showSuccess('add-fish-success', 'Fish added successfully!');
+        showSuccess('add-fish-success', 'Insect added successfully!');
         
         // Refresh tank after delay
         setTimeout(() => {
@@ -497,14 +497,14 @@ async function addFishToTank(fishId) {
         }, 1500);
         
     } catch (err) {
-        console.error('Error adding fish:', err);
+        console.error('Error adding insect:', err);
         showError('add-fish-error', err.message);
     }
 }
 
 // Remove fish from tank
 async function removeFish(fishId) {
-    if (!confirm('Are you sure you want to remove this fish from the tank?')) {
+    if (!confirm('Are you sure you want to remove this insect from the tank?')) {
         return;
     }
     
@@ -519,7 +519,7 @@ async function removeFish(fishId) {
         
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.error || 'Failed to remove fish');
+            throw new Error(errorData.error || 'Failed to remove insect');
         }
         
         // Refresh tank
@@ -527,7 +527,7 @@ async function removeFish(fishId) {
         
     } catch (err) {
         console.error('Error removing fish:', err);
-        alert('Failed to remove fish: ' + err.message);
+        alert('Failed to remove insect: ' + err.message);
     }
 }
 
