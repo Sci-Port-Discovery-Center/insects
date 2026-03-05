@@ -397,6 +397,22 @@ function loadFishImageToTank(imgUrl, fishData, onDone) {
             const y = Math.floor(Math.random() * maxY);
             const direction = Math.random() < 0.5 ? -1 : 1;
             const speed = fishData.speed || 2;
+            const motionStyle = fishData.motionStyle || fishData.style || (Math.random() < 0.6 ? 'flying' : 'crawling');
+            const motionParams = motionStyle === 'crawling'
+                ? {
+                    turnRate: 0.04 + Math.random() * 0.03,
+                    burstChance: 0.015 + Math.random() * 0.015,
+                    burstStrength: 0.16 + Math.random() * 0.18,
+                    hoverDamping: 0.7 + Math.random() * 0.1,
+                    maxVel: speed * (1.1 + Math.random() * 0.4)
+                }
+                : {
+                    turnRate: 0.1 + Math.random() * 0.08,
+                    burstChance: 0.03 + Math.random() * 0.04,
+                    burstStrength: 0.35 + Math.random() * 0.35,
+                    hoverDamping: 0.82 + Math.random() * 0.08,
+                    maxVel: speed * (1.7 + Math.random() * 0.6)
+                };
             const fishObj = createFishObject({
                 fishCanvas: displayCanvas,
                 x,
@@ -405,8 +421,8 @@ function loadFishImageToTank(imgUrl, fishData, onDone) {
                 phase: fishData.phase || 0,
                 amplitude: fishData.amplitude || 32,
                 speed: speed,
-                vx: speed * direction * 0.1, // Initialize with base velocity
-                vy: (Math.random() - 0.5) * 0.5, // Small random vertical velocity
+                vx: motionStyle === 'crawling' ? speed * direction * 0.03 : speed * direction * 0.15,
+                vy: motionStyle === 'crawling' ? (Math.random() - 0.5) * 0.08 : (Math.random() - 0.5) * 0.45,
                 artist: fishData.artist || fishData.Artist || 'Anonymous',
                 createdAt: fishData.createdAt || fishData.CreatedAt || null,
                 docId: fishData.docId || null,
@@ -1712,32 +1728,38 @@ function animateFishes() {
             // Handle edge collisions BEFORE applying friction
             let hitEdge = false;
 
-            // Left and right edges
+            // Left and right edges: prefer quick reorientation over soft bounces.
             if (fish.x <= 0) {
                 fish.x = 0;
                 fish.direction = 1; // Face right
-                fish.vx = Math.abs(fish.vx); // Ensure velocity points right
+                fish.vx = Math.abs(fish.vx) * 0.35 + fish.speed * 0.45;
+                fish.vy += (Math.random() - 0.5) * 0.18;
                 hitEdge = true;
             } else if (fish.x >= swimCanvas.width - fish.width) {
                 fish.x = swimCanvas.width - fish.width;
                 fish.direction = -1; // Face left
-                fish.vx = -Math.abs(fish.vx); // Ensure velocity points left
+                fish.vx = -Math.abs(fish.vx) * 0.35 - fish.speed * 0.45;
+                fish.vy += (Math.random() - 0.5) * 0.18;
                 hitEdge = true;
             }
 
-            // Top and bottom edges
+            // Top and bottom edges: redirect with less floaty rebound.
             if (fish.y <= 0) {
                 fish.y = 0;
-                fish.vy = Math.abs(fish.vy) * 0.5; // Bounce off top, but gently
+                fish.vy = Math.abs(fish.vy) * 0.25 + 0.06;
+                fish.direction = Math.random() < 0.5 ? -1 : 1;
                 hitEdge = true;
             } else if (fish.y >= swimCanvas.height - fish.height) {
                 fish.y = swimCanvas.height - fish.height;
-                fish.vy = -Math.abs(fish.vy) * 0.5; // Bounce off bottom, but gently
+                fish.vy = -Math.abs(fish.vy) * 0.25 - 0.06;
+                fish.direction = Math.random() < 0.5 ? -1 : 1;
                 hitEdge = true;
             }
 
-            // Apply friction - less when attracted to food
-            const frictionFactor = foodDetectionData.hasNearbyFood ? 0.88 : 0.85;
+            // Apply style-aware damping.
+            const frictionFactor = foodDetectionData.hasNearbyFood
+                ? Math.min(0.92, fish.hoverDamping + 0.05)
+                : fish.hoverDamping;
             fish.vx *= frictionFactor;
             fish.vy *= frictionFactor;
 
@@ -1760,11 +1782,10 @@ function animateFishes() {
                 fish.vx = fish.speed * fish.direction * 0.1;
             }
 
-            // If fish hit an edge, give it a small push away from the edge
+            // Small reorientation push to avoid wall-sticking.
             if (hitEdge) {
-                fish.vx += fish.speed * fish.direction * 0.2;
-                // Add small random vertical component to avoid getting stuck
-                fish.vy += (Math.random() - 0.5) * 0.3;
+                fish.vx += fish.speed * fish.direction * (isFlying ? 0.18 : 0.1);
+                fish.vy += (Math.random() - 0.5) * (isFlying ? 0.22 : 0.08);
             }
         }
 
