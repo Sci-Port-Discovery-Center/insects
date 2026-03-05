@@ -345,19 +345,19 @@ class ModalManager {
             
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.error || 'Failed to add fish to tank');
+                throw new Error(errorData.error || 'Failed to add insect to tank');
             }
             
             // Get tank name for better feedback
             const tank = this.userTanks.find(t => t.id === tankId);
             const tankName = tank ? tank.name : 'tank';
             
-            this.showSuccessNotification(`Fish successfully added to "${tankName}"!`);
+            this.showSuccessNotification(`Insect successfully added to "${tankName}"!`);
             closeModal();
             
         } catch (err) {
-            console.error('Error adding fish to tank:', err);
-            this.showErrorNotification('Failed to add fish to tank: ' + err.message);
+            console.error('Error adding insect to tank:', err);
+            this.showErrorNotification('Failed to add insect to tank: ' + err.message);
         }
     }
 
@@ -366,7 +366,7 @@ class ModalManager {
         const html = `
             <div style="text-align: center;">
                 <h2 style="margin: 0 0 15px 0; color: #333; font-size: 1.5em;">Login Required</h2>
-                <p style="margin: 0 0 15px 0; color: #666;">Login to add fish to your personal tank.</p>
+                <p style="margin: 0 0 15px 0; color: #666;">Login to add insect to your personal tank.</p>
                 <div style="text-align: center; margin-top: 20px;">
                     <a href="login.html" style="padding: 8px 12px; border: 1px solid #ddd; background: #007bff; color: white; text-decoration: none; margin-right: 10px; border-radius: 5px; transition: all 0.2s ease;">Login / Sign Up</a>
                     <button onclick="this.closest('.modal').click()" style="border: 1px solid #ddd; background: white; padding: 8px 12px; cursor: pointer; border-radius: 5px; color: #666; transition: all 0.2s ease;">Maybe Later</button>
