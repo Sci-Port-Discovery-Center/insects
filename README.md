@@ -1,56 +1,56 @@
-# DrawAFish.com - Interactive Fish Drawing
+# DrawAnInsect.com - Interactive Insect Drawing
 
-🐟 **[DrawAFish.com](https://drawafish.com)** 🐟
+🪲 **[DrawAnInsect.com](https://drawainsect.com)** 🪲
 
-Users have their fish drawings AI-validated in real time and watch their creations swim in a shared tank. 
+Users have their insect drawings AI-validated in real time and watch their creations crawl or fly in a shared tank. 
 
-[![Fish Drawing](https://img.shields.io/badge/Game-Live-brightgreen)](https://drawafish.com)
+[![Insect Drawing](https://img.shields.io/badge/Game-Live-brightgreen)](https://drawainsect.com)
 [![AI Powered](https://img.shields.io/badge/AI-ONNX-blue)](https://onnx.ai/)
 [![Community](https://img.shields.io/badge/Community-Voting-orange)](#features)
 
 ## 🎮 Features
 
 ### 🎨 **Interactive Drawing**
-- **Real-time AI validation** - Draw fish and get instant feedback from our neural network.
+- **Real-time AI validation** - Draw insects and get instant feedback from our neural network.
 - **Smart canvas** - Intuitive drawing tools with pressure-sensitive input
-- **Live classification** - Background color changes as the AI recognizes your fish
-- **Drawing hints** - Visual cues help you create better fish drawings
+- **Live classification** - Background color changes as the AI recognizes your insect
+- **Drawing hints** - Visual cues help you create better insect drawings
 
-### 🏊 **Community Fish Tank**
-- **Shared aquarium** - Watch your fish swim with creations from artists worldwide
-- **Multiple view modes** - See most recent, popular, or random fish
-- **Smooth animations** - Fish move naturally through the virtual water
-- **Interactive experience** - Click fish to learn about their creators
+### 🏊 **Community Insect Tank**
+- **Shared insectarium** - Watch your insects crawl and fly with creations from artists worldwide
+- **Multiple view modes** - See most recent, popular, or random insects
+- **Smooth animations** - Insects move with mode-specific animations in the virtual tank
+- **Interactive experience** - Click insects to learn about their creators
 
 ### 🗳️ **Voting & Rankings**
-- **Community voting** - Rate fish drawings from other artists
+- **Community voting** - Rate insect drawings from other artists
 - **Smart ranking system** - Algorithm balances recency and popularity
-- **Artist profiles** - Track your stats and see your fish collection
-- **Leaderboards** - Discover the most loved fish in the community
+- **Artist profiles** - Track your stats and see your insect collection
+- **Leaderboards** - Discover the most loved insects in the community
 
 ### 🗂️ **Personal Collections**
-- **Custom fish tanks** - Create themed collections of your favorite fish
+- **Custom insect tanks** - Create themed collections of your favorite insects
 - **Share collections** - Let friends explore your curated tanks
 - **Privacy controls** - Make tanks public or keep them private
-- **Organize by theme** - Group fish by color, style, or any criteria
+- **Organize by theme** - Group insects by color, style, or any criteria
 
 ## 🧠 How the AI Works
 
-The app uses machine learning for real-time fish recognition:
+The app uses machine learning for real-time insect recognition:
 
 - **ONNX Runtime Web** - Runs neural network inference entirely in your browser
 - **PyTorch-trained model** - Originally developed and trained using PyTorch
 - **Instant feedback** - Classification happens with every brush stroke
-- **Quality control** - Only validated fish can join the community tank
+- **Quality control** - Only validated insects can join the community tank
 
 ## 🚀 Getting Started
 
-1. **Visit [DrawAFish.com](https://drawafish.com)**
-2. **Start drawing** on the canvas (fish should face right!)
+1. **Visit [DrawAnInsect.com](https://drawainsect.com)**
+2. **Start drawing** on the canvas (insect should face right!)
 3. **Watch the AI** give feedback through background color changes
-4. **Submit your fish** when you're happy with it
-5. **See it swim** in the community tank with other creations
-6. **Vote and explore** other artists' fish in the rankings
+4. **Submit your insect** when you're happy with it
+5. **See it move** in the community tank with other creations
+6. **Vote and explore** other artists' insects in the rankings
 
 ## 📱 Cross-Platform Compatible
 
@@ -62,15 +62,15 @@ The app uses machine learning for real-time fish recognition:
 ## 🌟 Community Features
 
 ### For Artists
-- **Profile system** - Track your fish creations and statistics
+- **Profile system** - Track your insect creations and statistics
 - **Personal galleries** - Showcase your best work
 - **Achievement tracking** - See your voting scores and community engagement
-- **Social sharing** - Share your fish and tanks on social media
+- **Social sharing** - Share your insects and tanks on social media
 
 ### For Viewers  
-- **Discovery tools** - Find new artists and trending fish
+- **Discovery tools** - Find new artists and trending insects
 - **Voting system** - Help surface the best community content
-- **Collections** - Save favorites to personal fish tanks
+- **Collections** - Save favorites to personal insect tanks
 - **Commenting** - Engage with the community (coming soon)
 
 ## 🔧 Technical Details
@@ -79,19 +79,19 @@ The app uses machine learning for real-time fish recognition:
 
 ### HTML Pages (Root Directory)
 - `index.html` — Main drawing page and UI
-- `tank.html` — Fish tank display with swimming animations
-- `rank.html` — Fish ranking and voting system
+- `tank.html` — Insect tank display with crawling/flying animations
+- `rank.html` — Insect ranking and voting system
 - `login.html` — Authentication page for moderation
 - `moderation.html` — Moderation interface for managing submissions
 
 ### Source Files
 - `src/js/` — JavaScript files
   - `app.js` — Main drawing, AI, and UI logic
-  - `tank.js` — Fish tank animation and display
+  - `tank.js` — Insect tank animation and display
   - `rank.js` — Ranking system logic
   - `login.js` — Authentication handling
   - `moderation.js` — Moderation tools
-  - `fish-utils.js` — Shared utilities and API calls
+  - `fish-utils.js` — Shared utilities and API calls (legacy filename)
   - `firebase-init.js` — Firebase/Firestore initialization
 - `src/css/` — Stylesheets
   - `style.css` — Main application styles
@@ -104,13 +104,13 @@ The app uses machine learning for real-time fish recognition:
 ## Connected Repositories
 
 ### [fish-trainer](https://github.com/aldenhallak/fish-trainer)
-- Contains the PyTorch code for training the fish doodle classifier.
-- Exports the trained model to ONNX format, which is used by DrawAFish.com for in-browser inference.
+- Contains the PyTorch code for training the doodle classifier used by this app (legacy repo name).
+- Exports the trained model to ONNX format, which is used by DrawAnInsect.com for in-browser inference.
 - Includes data augmentation, preprocessing, and model evaluation scripts.
 
 ### [fish-be](https://github.com/aldenhallak/fish-be)
-- The backend for DrawAFish.com, deployed as a serverless function (I'm using cloud run :~)).
-- Handles fish image uploads, processes and stores submissions, and returns the canonical fish image for the tank.
+- The backend for DrawAnInsect.com, deployed as a serverless function (Cloud Run).
+- Handles insect image uploads, processes and stores submissions, and returns the canonical insect image for the tank.
 - May also provide endpoints for moderation, stats, or gallery features.
 
 ## Setup & Deployment
@@ -128,11 +128,11 @@ For offline testing you can run the bundled lightweight Node server that mimics 
 2. `npm install` (installs Express, multer, etc.)
 3. `npm run dev:server`
 
-This starts a backend on `http://localhost:8080` that supports uploads, fish listing, voting, reports, and the authentication flows used on the login/reset pages. When you load the frontend from `localhost`, `src/js/fish-utils.js` automatically points `BACKEND_URL` at this local server; you can also override it by setting `window.BACKEND_URL` or a `BACKEND_URL` entry in `localStorage`.
+This starts a backend on `http://localhost:8080` that supports uploads, insect listing, voting, reports, and the authentication flows used on the login/reset pages. When you load the frontend from `localhost`, `src/js/fish-utils.js` automatically points `BACKEND_URL` at this local server; you can also override it by setting `window.BACKEND_URL` or a `BACKEND_URL` entry in `localStorage`.
 
 ## Credits
-- AI model and training: [fish-trainer](https://github.com/aldenhallak/fish-trainer)
-- Backend: [fish-be](https://github.com/aldenhallak/fish-be)
+- AI model and training: [fish-trainer](https://github.com/aldenhallak/fish-trainer) (legacy name)
+- Backend: [fish-be](https://github.com/aldenhallak/fish-be) (legacy name)
 - Frontend & UI: This repository
 
 ---
