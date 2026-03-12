@@ -195,13 +195,6 @@ async function submitFish(artist) {
 }
 
 swimBtn.addEventListener('click', async () => {
-    // Check fish validity for warning purposes
-    const { isFish, modelUnavailable } = await verifyFishDoodle(canvas);
-    lastFishCheck = isFish;
-    if (!modelUnavailable) {
-        showFishWarning(!isFish);
-    }
-
     const savedArtist = localStorage.getItem('artistName');
     const artist = savedArtist && savedArtist.trim() ? savedArtist.trim() : 'Anonymous';
     localStorage.setItem('artistName', artist);
@@ -529,6 +522,7 @@ function makeDisplayFishCanvas(img, width = 80, height = 48) {
 }
 
 // ONNX fish doodle classifier integration
+const FISH_AI_ENABLED = false; // Temporarily disable client-side fish classification
 let ortSession = null;
 let lastFishCheck = true;
 let isModelLoading = false;
@@ -713,6 +707,10 @@ function isSafariBrowser() {
 
 // Updated verifyFishDoodle function to match new model output format
 async function verifyFishDoodle(canvas) {
+    if (!FISH_AI_ENABLED) {
+        return { isFish: true, fishProbability: null, modelUnavailable: true };
+    }
+
     const isSafari = isSafariBrowser();
     try {
         // Ensure model is ready before running inference
@@ -774,6 +772,10 @@ function showFishWarning(show) {
 
 // After each stroke, check if it's a fish
 async function checkFishAfterStroke() {
+    if (!FISH_AI_ENABLED) {
+        return;
+    }
+
     if (!window.ort) return; // ONNX runtime not loaded
     
     // Wait for model to be loaded if it's not ready yet
@@ -795,6 +797,10 @@ async function checkFishAfterStroke() {
 
 // Load ONNX Runtime Web from CDN if not present
 (function ensureONNXRuntime() {
+    if (!FISH_AI_ENABLED) {
+        return;
+    }
+
     if (!window.ort) {
         const script = document.createElement('script');
         script.src = 'https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js';
